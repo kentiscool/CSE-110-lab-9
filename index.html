@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab 9</title>
+
+  <style>
+    button {
+      margin: 3px;
+    }
+
+    input[type="number"] {
+      width: 60px;
+    }
+
+    output {
+      border: 1px solid gray;
+      display: block;
+      height: 18px;
+      margin-top: 5px;
+      padding: 5px;
+      width: 240px;
+    }
+  </style>
+</head>
+
+<body>
+  <fieldset>
+    <legend>Error Calculator</legend>
+    <input type="number" name="first-num" id="first-num" />
+    <select name="operator" id="operator">
+      <option>+</option>
+      <option>-</option>
+      <option>*</option>
+      <option>/</option>
+    </select>
+    <input type="number" name="second-num" id="second-num" />
+    <button id="calculate">Calculate</button>
+    <br />
+    <output></output>
+  </fieldset>
+
+  <section id="error-btns">
+    <button id="dumb-error">Dumb Error</button>
+    <button id="log">Console Log Demo</button>
+    <button id="error">Console Error Demo</button>
+    <button id="dir">Console Dir</button>
+    <button id="dirxml">Console dirxml</button>
+    <button id="group-start">Console Group Start</button>
+    <button id="group-end">Console Group End</button>
+    <button id="table">Console Table</button>
+    <button id="start-timer">Start Timer</button>
+    <button id="end-timer">End Timer</button>
+    <button id="trace">Console Trace</button>
+    <button id="global">Trigger a Global Error</button>
+  </section>
+
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+
+  <script>
+    window.TrackJS && TrackJS.install({
+      token: "96c3b59b9d644c8a83a65acd638af72d",
+      application: "lab9"
+    });
+    class MyError extends Error {
+      constructor(message) {
+        super(message); // (1)
+        this.name = "custom error"; // (2)
+      }
+    }
+
+    let calculateBtn = document.querySelector('#calculate');
+
+    calculateBtn.addEventListener('click', () => {
+      try {
+
+        let output = document.querySelector('output');
+        let firstNum = document.querySelector('#first-num').value;
+        let secondNum = document.querySelector('#second-num').value;
+        let operator = document.querySelector('#operator').value;
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (err) {
+        throw err
+      }
+    });
+
+    const data = {
+      something: "here"
+    }
+
+    document.querySelector('#dumb-error').addEventListener('click', () => {
+      try {
+        document.querySelector('#god').addEventListener('click', () => {
+          console.log("hey looks like he exists after all")
+        })
+      } catch (err) {
+        TrackJS.track(err)
+        throw new MyError(err)
+      } finally {
+        alert("Error caught")
+      }
+
+    });
+
+    document.querySelector('#log').addEventListener('click', () => {
+      console.log(data)
+    });
+
+    document.querySelector('#error').addEventListener('click', () => {
+      console.error(data)
+    });
+
+    document.querySelector('#dir').addEventListener('click', () => {
+      console.dir(data)
+    });
+
+    document.querySelector('#dirxml').addEventListener('click', () => {
+      console.dirxml(data)
+    });
+
+    document.querySelector('#group-start').addEventListener('click', () => {
+      console.group()
+    });
+
+    document.querySelector('#group-end').addEventListener('click', () => {
+      console.groupEnd()
+    });
+
+    document.querySelector('#table').addEventListener('click', () => {
+      console.table(["1", "2", "3"])
+    });
+
+    document.querySelector('#start-timer').addEventListener('click', () => {
+      console.time()
+    });
+
+    document.querySelector('#end-timer').addEventListener('click', () => {
+      console.timeEnd()
+    });
+
+    document.querySelector('#trace').addEventListener('click', () => {
+      console.trace()
+    });
+
+    document.querySelector('#global').addEventListener('click', () => {
+      console.groupEnd()
+    });
+
+    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+    // TODO - Make buttons functional
+  </script>
+
+
+</body>
+
+</html>
